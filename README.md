@@ -4,6 +4,75 @@ Pipeline autônomo de desenvolvimento de software usando agentes de IA. Um únic
 
 ---
 
+## Comando Global `agente` (CLI)
+
+Além dos modos de IDE, este repositório inclui uma ferramenta de linha de comando **global e reutilizável** — funciona em qualquer projeto, sem configuração prévia.
+
+```bash
+agente "CRUD de tarefas com autenticação JWT"
+```
+
+### Instalação (uma vez por máquina)
+
+```bash
+git clone https://github.com/edvar-costa/skills-codelab
+cd skills-codelab
+bash install.sh
+source ~/.bashrc
+```
+
+O `install.sh`:
+- Copia os skills para `~/.agente/skills/`
+- Cria o comando global `agente` no PATH
+- Verifica se Claude Code CLI e Gemini CLI estão instalados
+
+### Pré-requisitos do CLI
+
+| Ferramenta | Obrigatório | Uso |
+|---|---|---|
+| [Claude Code CLI](https://claude.ai/code) | Sim | PM e Engineer (`claude -p`) |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | Não | QA e DevOps (`gemini`) |
+
+> Sem Gemini CLI, QA e DevOps usam `claude-haiku` como fallback — sem custo extra.
+
+### Autenticação (uma vez por máquina)
+
+```bash
+claude auth   # Claude Code CLI
+gemini auth   # Gemini CLI (opcional)
+```
+
+Sem API keys. Sem cobrança por token. Usa as assinaturas que você já tem.
+
+### Menu de modos
+
+```
+[1] Full Cycle: PM → Engineer → QA → DevOps
+[2] Spec + Code: PM → Engineer
+[3] Só Spec: PM
+[4] Só QA
+[5] Só DevOps
+```
+
+### Estrutura global criada
+
+```
+~/.agente/
+├── startcycle.py     ← orquestrador Python (stdlib only)
+├── agents.md         ← personas do time
+├── agente            ← wrapper shell (bash/Mac/Linux)
+├── agente.bat        ← wrapper Windows CMD
+└── skills/           ← cópia de .agents/skills/
+```
+
+### Regras de contexto
+
+- Cada agente recebe **apenas o output do anterior**, não o histórico completo
+- O `session_log.md` guarda só as decisões finais, não o raciocínio interno
+- Os arquivos `production_artifacts/` são criados automaticamente no projeto atual
+
+---
+
 ## Compatibilidade de IDEs
 
 Este pipeline foi projetado para funcionar em dois ambientes:
@@ -43,6 +112,8 @@ Se quiser que um novo workflow funcione nos dois, crie nos dois diretórios.
 
 ```
 skills-codelab/
+├── install.sh                      # Instalador do comando global `agente`
+├── startcycle.py                   # Orquestrador Python (copiado para ~/.agente/)
 ├── .agents/                        # Configuração para Antigravity IDE
 │   ├── agents.md                   # Definição das personas do time
 │   ├── skills/                     # Capacidades individuais de cada agente
@@ -65,11 +136,10 @@ skills-codelab/
 ├── .claude/                        # Configuração para Claude Code
 │   └── commands/
 │       └── startcycle.md           # Orquestrador (Claude Code) — mesmo pipeline
-├── production_artifacts/           # Artefatos gerados pelo pipeline
-│   ├── Technical_Specification.md
-│   ├── bug_report.md
-│   └── session_log.md
-└── app_build/                      # Código gerado (destino legado)
+└── production_artifacts/           # Artefatos gerados pelo pipeline
+    ├── Technical_Specification.md
+    ├── bug_report.md
+    └── session_log.md
 ```
 
 ---
