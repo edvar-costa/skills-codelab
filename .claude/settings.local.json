@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(chmod +x __TRACKED_VAR__/.agente/agente)"
+      "Bash(chmod +x __TRACKED_VAR__/.agente/agente)",
+      "Bash(npm --version)",
+      "Bash(claude --version)",
+      "PowerShell(Get-Command claude -ErrorAction SilentlyContinue)",
+      "Read(//c/Users/Edvar/**)",
+      "Bash(python3 -c \"import shutil; print\\(shutil.which\\('claude'\\)\\)\")"
     ]
   }
 }
